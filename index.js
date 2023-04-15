@@ -4,6 +4,7 @@ const port = 4000;
 const app = express();
 const { Configuration, OpenAIApi } = require("openai");
 require("dotenv").config();
+const { twitterClient, twitterBearer } = require("./twitterClient.js");
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -19,6 +20,17 @@ const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
+let toBeTweeted ;
+
+const tweet = async () => {
+  try {
+    await twitterClient.v2.tweet({
+      text: toBeTweeted,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 const callToAPI = async () => {
   try {
@@ -29,8 +41,16 @@ const callToAPI = async () => {
     });
 
     answer = response.data.choices[0].message.content;
+
+    toBeTweeted = `Question - ${questionForGPT} //
+Answer by GPT - ${answer}
+`;
+    toBeTweeted =
+      toBeTweeted.length <= 270
+        ? toBeTweeted
+        : toBeTweeted.substr(0, 270) + "...";
+    tweet();
     history.push({ role: "assistant", content: answer });
-    console.log(history);
   } catch (error) {
     if (error.response) {
       console.log(error.response.status);
