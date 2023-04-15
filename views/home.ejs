@@ -2,39 +2,46 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css">
-    <title>
-        <%= title %>
-    </title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/style.css">
+  <title>
+    <%= title %>
+  </title>
 </head>
 
 <body>
 
 
-    <div class="chat-history">
+  <div class="chat-history">
 
-        <% for( let chat of chats){ %>
-            <p>
-                <%= chat.content %>
-            </p>
-            <hr>
-            <% } %>
-    </div>
+    <% for( let chat of chats){ %>
+    <p class="text-bg-success">
+      <%= chat.content %>
+    </p>
+    <hr>
+    <% } %>
+  </div>
 
-    <div class="my-form">
+  <div class="my-form">
 
-        <form action="ask-gpt" method="post">
+    <form action="ask-gpt" method="post">
 
-            <input type="text" name="question" id="" placeholder="Enter your question here" />
-            <input type="submit" value="Ask Question">
+      <input type="text" name="question" id="" placeholder="Enter your question here" />
+      <input type="submit" value="Ask Question">
 
-        </form>
-    </div>
+    </form>
+  </div>
 
 
+  <script>
+    // get the chat history element
+    const chatHistory = document.querySelector('.chat-history');
+
+    // scroll to the bottom of the chat history
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+  </script>
 </body>
 
 </html>

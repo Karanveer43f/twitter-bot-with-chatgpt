@@ -31,7 +31,6 @@ const callToAPI = async () => {
     answer = response.data.choices[0].message.content;
     history.push({ role: "assistant", content: answer });
     console.log(history);
-
   } catch (error) {
     if (error.response) {
       console.log(error.response.status);
