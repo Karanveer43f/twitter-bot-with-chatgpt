@@ -6,6 +6,9 @@ const { Configuration, OpenAIApi } = require("openai");
 require("dotenv").config();
 const { twitterClient, twitterBearer } = require("./twitterClient.js");
 
+const db = require("./config/mongoose");
+const Tweet = require("./models/chatTweet");
+
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./assets"));
@@ -14,13 +17,12 @@ app.listen(port, () => console.log(`Listening on ${port}`));
 let questionForGPT;
 let answer;
 let history = [];
-let myMessages = [];
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
-let toBeTweeted ;
+let toBeTweeted;
 
 const tweet = async () => {
   try {
@@ -45,6 +47,11 @@ const callToAPI = async () => {
     toBeTweeted = `Question - ${questionForGPT} //
 Answer by GPT - ${answer}
 `;
+
+    Tweet.create({
+      tweetContent: toBeTweeted,
+      date: new Date(),
+    });
     toBeTweeted =
       toBeTweeted.length <= 270
         ? toBeTweeted
